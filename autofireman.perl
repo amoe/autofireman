@@ -9,12 +9,9 @@ use Getopt::Long;
 use autodie qw(:all);
 use DBI;
 
+# This configuration will do the equivalent of 'psql -U postgres' at the shell
 my $driver = 'Pg';
-my $database = undef;
-my $host = 'localhost';
-my $port = 5432;
-
-my $data_source = "DBI:${driver}:dbname=${database};host=${host};port=${port}";
+my $data_source = "DBI:${driver}:";
 my $username = 'postgres';
 my $auth = undef;
 my %attr = (RaiseError => 1);
