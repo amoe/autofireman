@@ -36,19 +36,34 @@ sub get_dsn {
 
 
 my $list_tables_query = "
-    SELECT relname FROM pg_catalog.pg_class c
+    SELECT relname AS table_name, pg_total_relation_size(c.oid) AS size
+    FROM pg_catalog.pg_class c
     INNER JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
     WHERE n.nspname NOT IN ('pg_catalog', 'information_schema')
       AND n.nspname !~ '^pg_toast'
 ";
 
 
+my @all_stats;
+
 for my $database (@$result) {
     my $dbh = DBI->connect(get_dsn($database), $username, $auth, \%attr);
 
-    my $result2 = $dbh->selectcol_arrayref($list_tables_query);
-    dump($result2);
+    my %attr = (Slice => {});
+    # Use hashref and return the total size
+    my $result2 = $dbh->selectall_arrayref($list_tables_query, \%attr);
+
+    for my $record (@$result2) {
+        push @all_stats, {
+            table_name => $record->{table_name},
+            table_size => $record->{size},
+            database => $database
+        };
+    }
     
     $dbh->disconnect;
 }
 
+my @sorted = sort { $a->{table_size} <=> $b->{table_size} } @all_stats;
+
+dump(\@sorted);
