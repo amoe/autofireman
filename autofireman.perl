@@ -66,4 +66,10 @@ for my $database (@$result) {
 
 my @sorted = sort { $a->{table_size} <=> $b->{table_size} } @all_stats;
 
-dump(\@sorted);
+
+for my $rec (@sorted) {
+    printf(
+        "%d\t%s.%s\n",
+        $rec->{table_size}, $rec->{database}, $rec->{table_name}
+    );
+}
