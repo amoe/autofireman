@@ -1,12 +1,5 @@
 # autofireman
 
-Algorithm:
+Simply list out the size of all tables, server-wide.
 
-* Create a session to the server.
 
-* Get a list of all databases.
-
-* For each database:
-
-** Get size of table
-** Record table
