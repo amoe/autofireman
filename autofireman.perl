@@ -2,11 +2,7 @@
 
 use strict;
 use warnings;
-use v5.20.2;
-use Data::Dump qw/dump/;
-use File::Slurper qw/read_text/;
-use Getopt::Long;
-use autodie qw(:all);
+use v5.16.3;
 use DBI;
 
 # sudo sudo -u postgres perl autofireman.perl
