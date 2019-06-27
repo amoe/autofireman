@@ -31,12 +31,14 @@ sub get_dsn {
 }
 
 
+# The relkind filter here will filter out indexes, which can take substantial
+# space.
 my $list_tables_query = "
-    SELECT relname AS table_name, pg_total_relation_size(c.oid) AS size
+    SELECT relname AS table_name, c.relkind, pg_total_relation_size(c.oid) AS size
     FROM pg_catalog.pg_class c
     INNER JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
     WHERE n.nspname NOT IN ('pg_catalog', 'information_schema')
-      AND n.nspname !~ '^pg_toast'
+      AND n.nspname !~ '^pg_toast' AND c.relkind = 'r'
 ";
 
 
